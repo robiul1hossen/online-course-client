@@ -1,65 +1,104 @@
-import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import useCart from "../hooks/useCart";
+import { ImCross } from "react-icons/im";
+import Swal from "sweetalert2";
 
 const CardProduct = () => {
-  const [carts, setCarts] = useState([]);
-  const [cart] = useCart();
-  console.log(cart);
+  const [cart, refetch] = useCart();
 
-  useEffect(() => {
-    fetch("http://localhost:3000/carts")
-      .then((res) => res.json())
-      .then((data) => setCarts(data));
-  }, []);
-  console.log(carts);
+  const handleDelete = (cart) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        fetch(`http://localhost:3000/carts/${cart._id}`, {
+          method: "DELETE",
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            console.log(data);
+            if (data.deletedCount > 0) {
+              refetch();
+              Swal.fire(
+                "Deleted!",
+                "The course you added has been deleted.",
+                "success"
+              );
+            }
+          });
+      }
+    });
+  };
 
   return (
     <div className="overflow-x-auto">
-      <table className="table">
-        {/* head */}
-        <thead>
-          <tr>
-            <th>Course Name</th>
-            <th>Instructor</th>
-            <th>Price</th>
-            <th>Details</th>
-            <th>Enroll</th>
-          </tr>
-        </thead>
-        <tbody>
-          {carts.map((cart) => (
-            <tr key={cart.id}>
-              <td>
-                <div className="flex items-center space-x-3">
-                  <div className="avatar">
-                    <div className="mask mask-squircle w-12 h-12">
-                      <img src={cart.img} alt="Avatar Tailwind CSS Component" />
+      {cart.length > 0 ? (
+        <table className="table">
+          {/* head */}
+          <thead>
+            <tr>
+              <th>Course Name</th>
+              <th>Instructor</th>
+              <th>Price</th>
+              <th>Details</th>
+              <th>Enroll</th>
+              <th>Remove</th>
+            </tr>
+          </thead>
+          <tbody>
+            {cart.map((card) => (
+              <tr key={card._id}>
+                <td>
+                  <div className="flex items-center space-x-3">
+                    <div className="avatar">
+                      <div className="mask mask-squircle w-12 h-12">
+                        <img
+                          src={card.img}
+                          alt="Avatar Tailwind CSS Component"
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <div className="font-bold">{card.title}</div>
                     </div>
                   </div>
-                  <div>
-                    <div className="font-bold">{cart.title}</div>
-                  </div>
-                </div>
-              </td>
-              <td>{cart.instructorName}</td>
-              <td>${cart.price}</td>
-              <th>
-                <Link to={`/courseDetails/${cart._id}`}>
-                  {" "}
-                  <button className="btn btn-ghost btn-xs">Details</button>
-                </Link>
-              </th>
-              <th>
-                <Link>
-                  {" "}
-                  <button className="btn btn-ghost btn-xs">Enroll Now</button>
-                </Link>
-              </th>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+                </td>
+                <td>{card.instructorName}</td>
+                <td>${card.price}</td>
+                <td>
+                  <Link to={`/courseDetails/${card._id}`}>
+                    <button className="btn btn-ghost btn-xs">Details</button>
+                  </Link>
+                </td>
+                <td>
+                  <Link>
+                    <button className="btn btn-ghost btn-xs">Enroll Now</button>
+                  </Link>
+                </td>
+                <td>
+                  <Link>
+                    <button
+                      onClick={() => handleDelete(card)}
+                      className="btn btn-ghost btn-xs text-lg">
+                      <ImCross></ImCross>
+                    </button>
+                  </Link>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      ) : (
+        <h2 className="flex justify-center items-center text-2xl font-bold">
+          No Course Added To The Cart Yet!
+        </h2>
+      )}
     </div>
   );
 };

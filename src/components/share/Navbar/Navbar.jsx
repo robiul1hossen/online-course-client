@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { AuthContext } from "../../../provider/AuthProvider";
 import { FaShoppingCart } from "react-icons/fa";
 import useCart from "../../hooks/useCart";
+import "./Navbar.css";
 
 const Navbar = () => {
   const { user, logOut } = useContext(AuthContext);
@@ -30,22 +31,29 @@ const Navbar = () => {
             </li>
             <li>
               <Link to="/addtocard">
-                <FaShoppingCart></FaShoppingCart>+{cart.length || 0}
+                <FaShoppingCart></FaShoppingCart>+{cart?.length || 0}
               </Link>
             </li>
-            <li>
-              <Link to="/dashboard">Dashboard</Link>
-            </li>
+
             {user ? (
               <>
-                <button onClick={handleLogOut} className="btn btn-ghost">
-                  Logout
-                </button>
-                <img
-                  className="h-12 w-12 rounded-full leading-12"
-                  src={user?.photoURL}
-                  alt=""
-                />
+                <details className="dropdown">
+                  <summary className="m-1 btn border-none btn_img_bg">
+                    <img
+                      className="h-12 w-12 rounded-full leading-12"
+                      src={user?.photoURL}
+                      alt=""
+                    />
+                  </summary>
+                  <ul className="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52">
+                    <li>
+                      <Link to="/dashboard">Dashboard</Link>
+                    </li>
+                    <li onClick={handleLogOut}>
+                      <Link to="/login">Logout</Link>
+                    </li>
+                  </ul>
+                </details>
               </>
             ) : (
               <>

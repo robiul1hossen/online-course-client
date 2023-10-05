@@ -51,16 +51,16 @@ const AuthProvider = ({ children }) => {
       setUser(currentUser);
 
       // get and set jwt token
-      // if (currentUser) {
-      //   axios
-      //     .post("http://localhost:3000/jwt", { email: currentUser.email })
-      //     .then((data) => {
-      //       console.log(data.data);
-      //       localStorage.setItem("access-token", data.data.token);
-      //     });
-      // } else {
-      //   localStorage.removeItem("access-token");
-      // }
+      if (currentUser) {
+        axios
+          .post("http://localhost:3000/jwt", { email: currentUser?.email })
+          .then((data) => {
+            console.log(data.data);
+            localStorage.setItem("access-token", data.data.token);
+          });
+      } else {
+        localStorage.removeItem("access-token");
+      }
       setLoading(false);
     });
     return () => {

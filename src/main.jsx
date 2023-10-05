@@ -49,7 +49,11 @@ const router = createBrowserRouter([
       },
       {
         path: "/addtocard",
-        element: <CardProduct></CardProduct>,
+        element: (
+          <PrivateRoute>
+            <CardProduct></CardProduct>
+          </PrivateRoute>
+        ),
       },
     ],
   },

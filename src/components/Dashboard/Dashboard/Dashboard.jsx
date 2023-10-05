@@ -1,10 +1,12 @@
 import { Link, Outlet } from "react-router-dom";
-import { FaUsers } from "react-icons/fa";
+import { FaShoppingCart, FaUsers } from "react-icons/fa";
 import Navbar from "../../share/Navbar/Navbar";
 import Footer from "../../share/Footer/Footer";
+import useCart from "../../hooks/useCart";
 
 const Dashboard = () => {
   const isAdmin = true;
+  const [cart] = useCart();
 
   return (
     <div>
@@ -17,8 +19,7 @@ const Dashboard = () => {
           <Outlet></Outlet>
           <label
             htmlFor="my-drawer-2"
-            className="btn btn-primary drawer-button lg:hidden"
-          >
+            className="btn btn-primary drawer-button lg:hidden">
             Open drawer
           </label>
         </div>
@@ -26,8 +27,7 @@ const Dashboard = () => {
           <label
             htmlFor="my-drawer-2"
             aria-label="close sidebar"
-            className="drawer-overlay"
-          ></label>
+            className="drawer-overlay"></label>
           <ul className="menu  p-4 w-80 min-h-full bg-[#343A40] text-white">
             {isAdmin ? (
               <>
@@ -36,6 +36,11 @@ const Dashboard = () => {
                 </li>
                 <li className="hover:bg-[#fff]">
                   <a>Sidebar Item 2</a>
+                </li>
+                <li>
+                  <Link to="/addtocard">
+                    <FaShoppingCart></FaShoppingCart>+{cart?.length || 0}
+                  </Link>
                 </li>
                 <li className="hover:bg-[#fff]">
                   <Link to="/dashboard/allusers">

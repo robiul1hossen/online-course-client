@@ -22,20 +22,31 @@ const Login = () => {
     event.preventDefault();
     const form = event.target;
     const email = form.email.value;
+    const name = form.name.value;
     const password = form.password.value;
 
     signIn(email, password).then((result) => {
-      const user = result.user;
-      console.log(user);
+      const savedUser = { email: email, name: name, role: "student" };
+      fetch("http://localhost:3000/users", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify(savedUser),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data);
+          Swal.fire({
+            position: "top-end",
+            icon: "success",
+            title: "Login Successful",
+            showConfirmButton: false,
+            timer: 1500,
+          });
 
-      Swal.fire({
-        position: "top-end",
-        icon: "success",
-        title: "User Login Successful",
-        showConfirmButton: false,
-        timer: 1500,
-      });
-      navigate(from, { replace: true });
+          navigate(from, { replace: true });
+        });
     });
   };
 

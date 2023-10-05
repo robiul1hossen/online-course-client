@@ -4,7 +4,6 @@ import Swal from "sweetalert2";
 
 const LaunchCourse = () => {
   const { user } = useContext(AuthContext);
-  console.log(user);
 
   const haldleLaunchCourse = (event) => {
     event.preventDefault();
@@ -47,7 +46,6 @@ const LaunchCourse = () => {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
         if (data.insertedId) {
           Swal.fire({
             position: "top-end",

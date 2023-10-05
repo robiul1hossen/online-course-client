@@ -13,10 +13,10 @@ const SocialLogin = () => {
   const handleGoogleLogin = () => {
     googleSignIn().then((result) => {
       const loggedUser = result.user;
-      console.log(loggedUser);
       const savedUser = {
         email: loggedUser.email,
         name: loggedUser.displayName,
+        role: "student",
       };
       fetch("http://localhost:3000/users", {
         method: "POST",
@@ -36,8 +36,7 @@ const SocialLogin = () => {
       <div>
         <button
           onClick={handleGoogleLogin}
-          className="btn btn-circle btn-outline mr-4 text-3xl"
-        >
+          className="btn btn-circle btn-outline mr-4 text-3xl">
           <FaGoogle></FaGoogle>
         </button>
         <button className="btn btn-circle btn-outline text-3xl">

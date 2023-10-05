@@ -37,46 +37,48 @@ const CourseDetails = () => {
     _id,
   } = courseData;
 
-  const handleAddToCart = (courseData) => {
-    const orderCourse = {
-      orderCourseId: _id,
-      email: user.email,
-      img,
-      desc,
-      instructorName,
-      title,
-      price,
-      rating,
-      schedule,
-      syllabus,
-      total_assignment,
-      assignment_duration,
-      certificate,
-      rewards,
-    };
-    fetch("http://localhost:3000/carts", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(orderCourse),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.insertedId) {
-          refetch();
-          Swal.fire({
-            position: "top-end",
-            icon: "success",
-            title: "Your work has been saved",
-            showConfirmButton: false,
-            timer: 1500,
-          });
-        }
+  const handleAddToCart = () => {
+    if (user && user?.email) {
+      const orderCourse = {
+        orderCourseId: _id,
+        email: user.email,
+        img,
+        desc,
+        instructorName,
+        title,
+        price,
+        rating,
+        schedule,
+        syllabus,
+        total_assignment,
+        assignment_duration,
+        certificate,
+        rewards,
+      };
+      fetch("http://localhost:3000/carts", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(orderCourse),
       })
-      .catch((error) => {
-        console.error("Error adding to cart:", error);
-      });
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.success) {
+            refetch();
+            Swal.fire({
+              position: "top-end",
+              icon: "success",
+              title: "Your work has been saved",
+              showConfirmButton: false,
+              timer: 1500,
+            });
+          }
+        })
+        .catch((error) => {
+          console.error("Error adding to cart:", error);
+        });
+    }
   };
 
   return (
